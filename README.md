@@ -33,7 +33,7 @@ Never wonder if your application was seen. ShadowBot syncs with your Gmail to de
 -   **Opened**: Detects if a recruiter or system opened your email (via pixel tracking or thread updates).
 -   **Ghosted**: Automatically flags applications that haven't received a reply in >7 days.
 
-### ☁️ Cloud Sync & Privacy
+### Cloud Sync & Privacy
 -   **Local First**: All data is stored in `chrome.storage.local`.
 -   **Cloud Backup**: Automatically syncs your database to your Google Account via `chrome.storage.sync`, ensuring you never lose progress across devices.
 
