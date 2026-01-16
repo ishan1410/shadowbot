@@ -1,4 +1,4 @@
-# ShadowBot 🕵️‍♂️
+# ShadowBot
 
 > **The brutalist, privacy-focused job application tracker for modern developers.**
 
@@ -10,9 +10,9 @@ ShadowBot is a powerful **Chrome Extension** that transforms your chaotic job hu
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔍 Auto-Detection & Scraping
+### Auto-Detection & Scraping
 Instantly extracts Role, Company, Location, and Description from supported platforms using advanced DOM heuristics.
 -   **Greenhouse** (`greenhouse.io`)
 -   **Lever** (`lever.co`)
@@ -21,13 +21,13 @@ Instantly extracts Role, Company, Location, and Description from supported platf
 -   **LinkedIn** (`linkedin.com/jobs`)
 -   **Generic Fallback**: Smartly detects "Apply" buttons and Job Schema on unsupported sites.
 
-### 📊 The Command Center (Dashboard)
+### The Command Center (Dashboard)
 A centralized, notion-style dashboard running locally in your browser.
 -   **Pipeline Funnel**: Visualize your conversion rates from `Applied` → `Interview` → `Offer`.
 -   **Activity Heatmap**: Keep your momentum with a GitHub-style daily activity grid.
 -   **Search & Filter**: Instantly find that one application from 3 weeks ago.
 
-### 🕵️‍♂️ Gmail Spy (Experimental)
+### Gmail Spy (Experimental)
 Never wonder if your application was seen. ShadowBot syncs with your Gmail to detect:
 -   **Sent**: Confirms the application email was sent.
 -   **Opened**: Detects if a recruiter or system opened your email (via pixel tracking or thread updates).
@@ -39,7 +39,7 @@ Never wonder if your application was seen. ShadowBot syncs with your Gmail to de
 
 ---
 
-## 🛠 Installation
+## Installation
 
 Since this is a specialized tool, you can load it directly into Chrome as a developer extension.
 
@@ -77,7 +77,7 @@ Click "Open Dashboard" from the extension popup.
 
 ---
 
-## 🏗 Architecture
+## Architecture
 
 ShadowBot is built with a modern **Extension Manifest V3** architecture.
 
@@ -102,7 +102,7 @@ graph TD
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -114,7 +114,7 @@ Contributions are what make the open-source community such an amazing place to l
 
 ---
 
-## 📄 License
+## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
