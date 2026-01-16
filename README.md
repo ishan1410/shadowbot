@@ -61,7 +61,7 @@ Since this is a specialized tool, you can load it directly into Chrome as a deve
 
 ---
 
-## 🚀 Usage Guide
+## Usage Guide
 
 ### 1. Tracking a Job
 When you visit a supported job board, ShadowBot's **Side Panel** will light up or the icon will show a badge.
