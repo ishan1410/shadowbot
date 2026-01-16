@@ -1,0 +1,59 @@
+{
+    "manifest_version": 3,
+    "name": "ShadowBot: Job Application Tracker",
+    "version": "1.0",
+    "description": "Automatically tracks your job applications in the background.",
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting",
+        "tabs",
+        "sidePanel"
+    ],
+    "side_panel": {
+        "default_path": "sidepanel.html"
+    },
+    "host_permissions": [
+        "<all_urls>",
+        "https://mail.google.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*.greenhouse.io/*",
+                "https://*.lever.co/*",
+                "https://*.ashbyhq.com/*",
+                "https://*.workable.com/*",
+                "https://*.linkedin.com/*"
+            ],
+            "js": [
+                "content.js"
+            ]
+        },
+        {
+            "matches": [
+                "https://mail.google.com/*"
+            ],
+            "js": [
+                "gmail_tracker.js"
+            ]
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "ShadowBot",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    }
+}

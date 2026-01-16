@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowBot Dashboard</title>
+    <link rel="stylesheet" href="lib/quill.snow.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- VIEW: HOME (Job List) -->
+        <section id="view-home" class="view-section active">
+            <div class="header">
+                <h1>My Applications</h1>
+                <p class="header-subtitle">Track and manage your job hunt</p>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h1 id="total-jobs">0</h1>
+                    <p class="metric-label">TOTAL JOBS</p>
+                </div>
+                <div class="metric-card">
+                    <h1 id="streak-count">0</h1>
+                    <div class="streak-container">
+                        <div class="streak-progress-fill" id="streak-bar"></div>
+                        <p class="metric-label">DAY STREAK</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <h1 id="active-count">0</h1>
+                    <p class="metric-label">ACTIVE PIPELINE</p>
+                </div>
+                <div class="metric-card">
+                    <h1 id="response-rate">0%</h1>
+                    <p class="metric-label">RESPONSE RATE</p>
+                </div>
+                <div class="metrics-actions" style="margin-left: auto; align-self: center; display: flex; gap: 8px;">
+                    <button id="add-application-btn" class="btn-primary btn-header-action" title="Add New Application">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Add</span>
+                    </button>
+                    <button id="backup-btn" class="btn-secondary" title="Download JSON Backup">Backup Data</button>
+                    <button id="restore-btn" class="btn-secondary" title="Restore from JSON">Restore Data</button>
+                    <button id="cloud-sync-btn" class="btn-secondary"
+                        style="border-color: var(--status-replied); color: var(--status-replied);"
+                        title="Restore from Google Cloud">Restore from Cloud</button>
+                    <button id="export-csv-btn" class="btn-secondary" title="Export to Excel/CSV">Export CSV</button>
+                    <input type="file" id="restore-file-input" accept=".json" style="display: none;" />
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="date">Date</th>
+                            <th class="sortable" data-sort="role">Role</th>
+                            <th class="sortable" data-sort="company">Company</th>
+                            <th class="sortable" data-sort="importance">Priority</th>
+                            <th>Notes</th>
+                            <th class="sortable" data-sort="status">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="app-list">
+                        <!-- Rows will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- VIEW: ANALYTICS -->
+        <section id="view-analytics" class="view-section">
+            <div class="header">
+                <h1>Analytics</h1>
+                <p class="header-subtitle">Insights into your progress</p>
+            </div>
+
+            <div class="metrics-grid" style="margin-bottom: 40px;">
+                <div class="metric-card">
+                    <h1 id="analytics-apps-today">0</h1>
+                    <p id="analytics-today-date" class="metric-label">TODAY</p>
+                </div>
+                <div class="metric-card">
+                    <h1 id="analytics-tracked">0</h1>
+                    <p class="metric-label">EMAILS TRACKED</p>
+                </div>
+                <div class="metric-card">
+                    <h1 id="analytics-open-rate">0%</h1>
+                    <p class="metric-label">OPEN RATE</p>
+                </div>
+                <div class="metric-card">
+                    <h1 id="analytics-ghosted">0</h1>
+                    <p class="metric-label">GHOSTED</p>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3>Pipeline Funnel</h3>
+                    <div id="funnel-chart" class="chart-content"></div>
+                </div>
+                <div class="chart-card">
+                    <h3>Activity Heatmap</h3>
+                    <div id="heatmap-chart" class="chart-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: SEARCH -->
+        <section id="view-search" class="view-section">
+            <div class="header">
+                <h1>Search & Filter</h1>
+                <p class="header-subtitle">Find specific applications</p>
+            </div>
+
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <input type="text" id="search-input" class="search-large"
+                        placeholder="Search by role, company, or notes...">
+                    <button id="search-btn" class="search-submit-btn" title="Search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select id="status-filter">
+                            <option value="All">All Statuses</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Replied">Replied</option>
+                            <option value="Emailed">Emailed</option>
+                            <option value="Interviewing">Interviewing</option>
+                            <option value="Offer">Offer</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Priority</label>
+                        <select id="importance-filter">
+                            <option value="All">All Priorities</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="action-buttons-container">
+                    <button id="clear-filters-btn" class="btn-secondary btn-blue">Clear Filters</button>
+                    <button id="clear-btn" class="btn-secondary btn-danger">Clear All Data</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: AI AGENT -->
+        <section id="view-ai" class="view-section">
+            <div class="header" style="margin-bottom: 0;">
+                <h1>AI Agent</h1>
+                <p class="header-subtitle">Generate cover letters & prep with Gemini</p>
+            </div>
+
+            <!-- Toolbar / Actions Bar -->
+            <div class="stats-bar" style="align-items: center; padding-top: 20px; padding-bottom: 20px;">
+                <div style="flex: 1;"></div> <!-- Spacer -->
+                <button id="open-ai-settings-btn" class="btn-secondary"
+                    style="display: flex; gap: 8px; align-items: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z">
+                        </path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    CONFIGURE AI
+                </button>
+            </div>
+
+            <div class="ai-container"
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; height: calc(100vh - 180px);">
+                <!-- LEFT: Input Only -->
+                <div class="card"
+                    style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; display: flex; flex-direction: column;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Job Description</label>
+                    <textarea id="ai-job-desc" placeholder="Paste Job Description here..."
+                        style="width: 100%; flex: 1; padding: 10px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; font-family: 'Inter', sans-serif; line-height: 1.5; resize: none;"></textarea>
+
+                    <button id="ai-generate-btn" class="btn-primary full-width"
+                        style="padding: 12px; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 600; letter-spacing: 0.5px;">
+                        <span>✨</span> GENERATE
+                    </button>
+                </div>
+
+                <!-- RIGHT: AI Output -->
+                <!-- RIGHT: AI Output -->
+                <div class="card ai-output-card"
+                    style="padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; display: flex; flex-direction: column;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">AI Output</label>
+                    <!-- Quill Toolbar Container (will be auto-generated or use custom) -->
+                    <div id="ai-output-editor" style="flex: 1; background: #fff; color: #000;"></div>
+
+                    <div class="ai-actions"
+                        style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="ai-word-count"
+                            style="font-size: 12px; color: rgba(255,255,255,0.5); font-family: 'Inter', sans-serif;">0
+                            words</span>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="ai-download-btn" class="btn-primary" style="width: auto; padding: 10px 20px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="margin-right: 8px;">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                DOWNLOAD PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+    </div>
+
+    <!-- SETTINGS SIDE DRAWER -->
+    <div id="ai-settings-drawer" class="drawer">
+        <div class="drawer-header">
+            <h2>AI Configuration</h2>
+            <button id="close-ai-settings" class="close-drawer-btn">&times;</button>
+        </div>
+
+        <div class="drawer-content">
+            <div class="drawer-section">
+                <label class="drawer-label">Personal Profile (For PDF Header)</label>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <input type="text" id="profile-name" placeholder="Full Name" class="status-select-large"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); width: 100%; padding: 10px; border-radius: 4px;">
+                    <input type="text" id="profile-email" placeholder="Email" class="status-select-large"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); width: 100%; padding: 10px; border-radius: 4px;">
+                    <input type="text" id="profile-phone" placeholder="Phone Number" class="status-select-large"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); width: 100%; padding: 10px; border-radius: 4px;">
+                    <input type="text" id="profile-link" placeholder="LinkedIn / Portfolio" class="status-select-large"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); width: 100%; padding: 10px; border-radius: 4px;">
+                </div>
+            </div>
+
+            <div class="drawer-section" style="margin-top: 20px;">
+                <label class="drawer-label">Gemini API Key</label>
+                <input type="password" id="gemini-api-key" placeholder="Paste your API Key here..."
+                    class="status-select-large"
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); width: 100%; padding: 10px; border-radius: 4px;">
+                <p style="font-size: 0.8em; color: var(--text-secondary); margin-top: 5px;">Your key is stored locally.
+                </p>
+            </div>
+
+            <div class="drawer-section" style="margin-top: 20px;">
+                <label class="drawer-label">Your Resume (PDF)</label>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <input type="file" id="resume-upload" accept=".pdf"
+                        style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); width: 100%;">
+                    <div
+                        style="font-size: 0.9em; color: var(--text-secondary); display: flex; align-items: center; gap: 5px;">
+                        <span id="resume-file-name">No file saved</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="drawer-section" style="margin-top: 20px;">
+                <label class="drawer-label">Custom Prompt</label>
+                <textarea id="ai-custom-prompt" rows="8" class="notes-input"
+                    placeholder="Write a cover letter for the role of [Role] at [Company]..."
+                    style="min-height: 150px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); width: 100%; padding: 10px; border-radius: 4px;"></textarea>
+            </div>
+        </div>
+
+        <div class="drawer-footer">
+            <button id="save-ai-settings-btn" class="btn-primary full-width" style="width: 100%;">Save Settings</button>
+        </div>
+    </div>
+    <div id="ai-settings-overlay" class="drawer-overlay"></div>
+
+    <!-- Floating Navigation -->
+    <nav class="floating-nav">
+        <button class="nav-item active" data-target="view-home">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Home
+        </button>
+        <button class="nav-item" data-target="view-analytics">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
+            </svg>
+            Analytics
+        </button>
+        <button class="nav-item" data-target="view-search">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Search
+        </button>
+        <button class="nav-item" data-target="view-ai">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            AI Agent
+        </button>
+    </nav>
+
+    <!-- Slide-Over Drawer -->
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+    <div id="job-drawer" class="drawer">
+        <div class="drawer-header">
+            <button id="close-drawer" class="close-drawer-btn">&times;</button>
+            <div class="drawer-title-group">
+                <h2 id="drawer-role">Role Name</h2>
+                <div class="drawer-subtitle-row" style="display: flex; align-items: center; gap: 10px;">
+                    <h3 id="drawer-company" style="margin: 0;">Company Name</h3>
+                    <span id="drawer-email-status-icon"></span>
+                </div>
+            </div>
+            <a id="drawer-link" href="#" target="_blank" class="btn-primary drawer-link-btn">
+                Visit Job Post ↗
+            </a>
+        </div>
+
+        <div class="drawer-content">
+            <div class="drawer-section">
+                <label class="drawer-label">Status</label>
+                <select id="drawer-status" class="status-select-large">
+                    <option value="Applied">Applied</option>
+                    <option value="Replied">Replied</option>
+                    <option value="Emailed">Emailed</option>
+                    <option value="Interviewing">Interviewing</option>
+                    <option value="Offer">Offer</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+
+            <div class="drawer-section">
+                <label class="drawer-label">Priority</label>
+                <div id="drawer-importance-pills" class="priority-pills">
+                    <button class="pill" data-value="High">High</button>
+                    <button class="pill" data-value="Medium">Medium</button>
+                    <button class="pill" data-value="Low">Low</button>
+                </div>
+            </div>
+
+            <div class="drawer-section">
+                <label class="drawer-label">Linked Email (Spy)</label>
+                <input type="text" id="drawer-email" class="status-select-large"
+                    placeholder="Subject or Recipient (e.g. hiring@company.com)"
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary);">
+            </div>
+
+            <div class="drawer-section">
+                <label class="drawer-label">Notes & Prep</label>
+                <div class="notes-wrapper">
+                    <textarea id="drawer-notes" class="notes-input"
+                        placeholder="Add notes... (Drag to expand)"></textarea>
+                    <button id="drawer-save-notes" class="save-notes-btn" title="Save Notes">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="drawer-section">
+                <label class="drawer-label">Job Description</label>
+                <div id="drawer-description" class="description-box"></div>
+            </div>
+
+            <div class="drawer-footer">
+                <button id="drawer-delete" class="btn-text-danger">Delete Application</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div id="details-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-body">
+                <!-- Javascript will populate this -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Application Modal (Manual Entry) -->
+    <div id="add-app-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal" id="close-add-modal">&times;</span>
+            <h2>Add Application</h2>
+            <div class="modal-form">
+                <div class="form-group">
+                    <label>Role</label>
+                    <input type="text" id="add-role" placeholder="Role Name">
+                </div>
+                <div class="form-group">
+                    <label>Company</label>
+                    <input type="text" id="add-company" placeholder="Company Name">
+                </div>
+                <div class="form-group full-width" id="add-link-group">
+                    <label>Link</label>
+                    <input type="text" id="add-link" placeholder="https://...">
+                </div>
+                <div class="form-group full-width">
+                    <label>Status</label>
+                    <select id="add-status">
+                        <option value="Applied">Applied</option>
+                        <option value="Emailed">Emailed</option>
+                        <option value="Interviewing">Interviewing</option>
+                        <option value="Offer">Offer</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="form-group full-width" id="add-desc-group">
+                    <label>Description</label>
+                    <textarea id="add-desc" rows="5" placeholder="Job description..."></textarea>
+                </div>
+                <div class="form-group full-width" id="add-notes-group">
+                    <label>Notes</label>
+                    <textarea id="add-notes" rows="2" placeholder="Quick notes..."></textarea>
+                </div>
+                <button id="submit-new-app" class="btn-primary full-width"
+                    style="margin-top:1rem; grid-column: span 2;">Add
+                    Application</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="lib/quill.min.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,543 @@
+:root {
+  /* High Contrast Minimalist Theme (Synced with Dashboard) */
+  --bg-primary: #050505;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #111111;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --text-muted: #444444;
+
+  /* Accents */
+  --accent: #ffffff;
+  --accent-hover: #cccccc;
+
+  /* Borders */
+  --border-color: #333333;
+
+  /* Status Colors */
+  --status-applied: #3b82f6;
+  --status-replied: #06b6d4;
+  --status-interviewing: #eab308;
+  --status-offer: #22c55e;
+  --status-rejected: #ef4444;
+
+  --font-family: 'Inter', sans-serif;
+  --font-mono: monospace;
+}
+
+body {
+  font-family: var(--font-family);
+  width: 100%;
+  max-width: 380px;
+  min-width: 320px;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.container {
+  padding: 24px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  /* Sharp */
+  object-fit: contain;
+  mix-blend-mode: screen;
+  /* Makes black background transparent */
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 800;
+  /* Bolder */
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+  background: none;
+  -webkit-text-fill-color: initial;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn,
+.dashboard-link {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 0;
+  /* Sharp */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover,
+.dashboard-link:hover {
+  color: var(--bg-primary);
+  background-color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+/* Control Panel */
+.control-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+}
+
+/* Toggle Switch (Brutalist) */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-tertiary);
+  /* Dark track */
+  border: 1px solid var(--border-color);
+  transition: .2s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--text-secondary);
+  transition: .2s;
+  box-shadow: none;
+  border-radius: 0;
+  /* Square knob */
+}
+
+input:checked+.slider {
+  background-color: var(--bg-tertiary);
+  border-color: var(--status-offer);
+  /* Green border when active */
+}
+
+input:checked+.slider:before {
+  transform: translateX(20px);
+  background-color: var(--status-offer);
+  /* Green knob */
+}
+
+.slider.round {
+  border-radius: 0;
+}
+
+.slider.round:before {
+  border-radius: 0;
+}
+
+.toggle-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+/* Status Card */
+.card {
+  background: var(--bg-secondary);
+  border-radius: 0;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  /* Square */
+  background-color: var(--text-secondary);
+}
+
+.status-indicator.active {
+  background-color: var(--status-offer);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
+#status-text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+/* Inputs */
+.input-group,
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+input[type="text"],
+textarea,
+.select-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  font-size: 14px;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+.select-input:focus {
+  outline: none;
+  border-color: var(--text-primary);
+  background-color: var(--bg-secondary);
+}
+
+/* Buttons */
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+  box-shadow: none;
+  margin-top: 12px;
+}
+
+.btn-primary:hover {
+  background: #cccccc;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 12px 16px;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: block;
+  margin: 0 auto;
+}
+
+.btn-text:hover {
+  color: var(--text-primary);
+}
+
+.button-group-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+/* Chips / Tags */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag-chip {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.tag-chip:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.tag-chip.selected {
+  background-color: var(--bg-tertiary);
+  border-color: var(--status-applied);
+  /* Default blue, JS can override via style if needed */
+  color: var(--status-applied);
+}
+
+/* We might want specific selected colors if possible, but default blue is fine for now or generic accent */
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+.hidden {
+  display: none;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+/* CSS Updated: Force Reload */
+/* Success View */
+#success-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+#success-view.hidden {
+  display: none !important;
+}
+
+.success-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.success-content h2 {
+  font-size: 24px;
+  margin: 16px 0 8px;
+  color: var(--status-offer);
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.success-content p {
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 16px;
+}
+
+.success-content .sub-text {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-family: var(--font-mono);
+}
+
+/* Checkmark Animation */
+.checkmark-circle {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  border: 3px solid var(--status-offer);
+  border-radius: 50%;
+  margin-bottom: 16px;
+}
+
+.checkmark.draw:after {
+  animation-duration: 800ms;
+  animation-timing-function: ease;
+  animation-name: checkmark;
+  transform: scaleX(-1) rotate(135deg);
+}
+
+.checkmark:after {
+  opacity: 1;
+  height: 40px;
+  width: 20px;
+  transform-origin: left top;
+  border-right: 4px solid var(--status-offer);
+  border-top: 4px solid var(--status-offer);
+  content: '';
+  left: 14px;
+  top: 40px;
+  position: absolute;
+}
+
+@keyframes checkmark {
+  0% {
+    height: 0;
+    width: 0;
+    opacity: 1;
+  }
+
+  20% {
+    height: 0;
+    width: 20px;
+    opacity: 1;
+  }
+
+  40% {
+    height: 40px;
+    width: 20px;
+    opacity: 1;
+  }
+
+  100% {
+    height: 40px;
+    width: 20px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
